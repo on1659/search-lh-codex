@@ -31,6 +31,19 @@
             />
             <button type="submit">검색</button>
           </div>
+          <div class="price-row">
+            <label for="max-price" class="price-label">
+              최대 금액 <span class="price-label-hint">선택 · 만원 단위</span>
+            </label>
+            <input
+              id="max-price"
+              name="maxPrice"
+              type="number"
+              min="0"
+              step="100"
+              placeholder="제한 없음 — 예: 15000 = 1억 5천만원"
+            />
+          </div>
         </form>
 
         <div id="status" class="status">검색 대기 중</div>

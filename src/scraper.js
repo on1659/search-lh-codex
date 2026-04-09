@@ -1326,17 +1326,71 @@ async function searchPeterpan(site, location) {
   }
 }
 
-async function searchListings(location) {
+function parsePriceLabelToManwon(priceLabel) {
+  if (!priceLabel) {
+    return null;
+  }
+
+  // 거래 유형 접두어 제거 후 보증금 부분만 추출 (/ 이후 월세 제외)
+  const raw = normalizeWhitespace(priceLabel)
+    .replace(/^(전세|월세|매매|반전세)\s*/i, "")
+    .split("/")[0]
+    .trim();
+
+  let total = 0;
+
+  const eokMatch = raw.match(/(\d[\d,]*)억/);
+  if (eokMatch) {
+    total += parseInt(eokMatch[1].replace(/,/g, ""), 10) * 10000;
+  }
+
+  // 억 뒤의 만원 단위 or 단독 만원 단위
+  const manwonMatch =
+    raw.match(/억\s*(\d[\d,]*)(?:만원?)?$/) ||
+    raw.match(/^(\d[\d,]*)(?:만원?)?$/);
+  const trailing = manwonMatch?.[1];
+
+  if (trailing) {
+    total += parseInt(trailing.replace(/,/g, ""), 10);
+  }
+
+  return total > 0 ? total : null;
+}
+
+function applyPriceConstraint(items, maxPriceManwon) {
+  if (!maxPriceManwon || !Number.isFinite(maxPriceManwon) || maxPriceManwon <= 0) {
+    return items;
+  }
+
+  const annotated = items.map((item) => {
+    const priceManwon = parsePriceLabelToManwon(item.priceLabel);
+    const priceExceeded = priceManwon !== null && priceManwon > maxPriceManwon;
+    return { ...item, priceManwon, priceExceeded };
+  });
+
+  // 예산 내 매물 먼저, 초과 매물 하단 배치
+  return [
+    ...annotated.filter((item) => !item.priceExceeded),
+    ...annotated.filter((item) => item.priceExceeded),
+  ];
+}
+
+async function searchListings(location, maxPrice) {
   const startedAt = new Date().toISOString();
   const siteResults = await Promise.all(
     SITES.map((site) => searchSingleSiteWithTimeout(site, location)),
   );
-  const items = siteResults.flatMap((siteResult) => siteResult.results);
+  const rawItems = siteResults.flatMap((siteResult) => siteResult.results);
+  const maxPriceManwon = Number(maxPrice) || null;
+  const items = applyPriceConstraint(rawItems, maxPriceManwon);
+  const exceededCount = items.filter((item) => item.priceExceeded).length;
 
   return {
     location,
     startedAt,
     totalCount: items.length,
+    maxPrice: maxPriceManwon,
+    exceededCount,
     sites: siteResults,
     items,
   };
@@ -1349,6 +1403,7 @@ module.exports = {
   matchesLocation,
   normalizeWhitespace,
   parseListingFacts,
+  parsePriceLabelToManwon,
   splitLocation,
   searchListings,
 };

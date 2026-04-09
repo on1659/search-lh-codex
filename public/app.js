@@ -1,5 +1,6 @@
 const form = document.querySelector("#search-form");
 const locationInput = document.querySelector("#location");
+const maxPriceInput = document.querySelector("#max-price");
 const statusEl = document.querySelector("#status");
 const summaryEl = document.querySelector("#summary");
 const resultsEl = document.querySelector("#results");
@@ -132,6 +133,10 @@ function buildResultTags(item) {
     });
   }
 
+  if (item.priceExceeded) {
+    tags.push({ label: "가격초과", className: "is-price-exceeded" });
+  }
+
   if (item.matchedKeyword) {
     tags.push({
       label: item.verificationLevel === "strong" ? "LH 가능" : "LH",
@@ -149,9 +154,12 @@ function setLoading(isLoading, location) {
 }
 
 function renderSummary(data) {
+  const priceNote = data.maxPrice
+    ? ` · 예산 ${Number(data.maxPrice).toLocaleString()}만원 초과 <strong>${data.exceededCount ?? 0}건</strong> 하단 배치`
+    : "";
   summaryEl.innerHTML = `
     <strong>${escapeHtml(data.location)}</strong> 기준으로
-    <strong>${data.totalCount}건</strong>의 LH 관련 링크를 찾았습니다.
+    <strong>${data.totalCount}건</strong>의 LH 관련 링크를 찾았습니다.${priceNote}
   `;
 }
 
@@ -173,6 +181,9 @@ function renderResults(items) {
 
   for (const item of items) {
     const node = resultTemplate.content.firstElementChild.cloneNode(true);
+    if (item.priceExceeded) {
+      node.classList.add("is-exceeded");
+    }
     const imageWrap = node.querySelector(".result-image-wrap");
     const image = node.querySelector(".result-image");
 
@@ -299,7 +310,7 @@ form.addEventListener("submit", async (event) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ location }),
+      body: JSON.stringify({ location, maxPrice: Number(maxPriceInput.value) || null }),
     });
 
     const data = await response.json();

@@ -7,6 +7,7 @@ const {
   includesAnyKeyword,
   matchesLocation,
   parseListingFacts,
+  parsePriceLabelToManwon,
 } = require("../src/scraper");
 
 // ── containsNegativeLhContext ─────────────────────────────────────────────────
@@ -136,4 +137,35 @@ test("parseListingFacts: 투룸 라벨 파싱", () => {
 test("parseListingFacts: 투룸이상 라벨 파싱", () => {
   const result = parseListingFacts("투룸이상 빌라", "");
   assert.equal(result.roomLabel, "투룸+");
+});
+
+// ── parsePriceLabelToManwon ──────────────────────────────────────────────────
+
+test("parsePriceLabelToManwon: 전세 1억 5천만원", () => {
+  assert.equal(parsePriceLabelToManwon("전세 1억 5,000만원"), 15000);
+});
+
+test("parsePriceLabelToManwon: 월세 보증금만 추출 (/ 이후 무시)", () => {
+  assert.equal(parsePriceLabelToManwon("월세 5,000/35"), 5000);
+});
+
+test("parsePriceLabelToManwon: 억+만원 혼합", () => {
+  assert.equal(parsePriceLabelToManwon("1억 5,000/35"), 15000);
+});
+
+test("parsePriceLabelToManwon: 반전세 보증금", () => {
+  assert.equal(parsePriceLabelToManwon("반전세 1억/50"), 10000);
+});
+
+test("parsePriceLabelToManwon: 매매 3억", () => {
+  assert.equal(parsePriceLabelToManwon("3억"), 30000);
+});
+
+test("parsePriceLabelToManwon: 만원 단위만", () => {
+  assert.equal(parsePriceLabelToManwon("5,000만원"), 5000);
+});
+
+test("parsePriceLabelToManwon: null 입력 시 null 반환", () => {
+  assert.equal(parsePriceLabelToManwon(null), null);
+  assert.equal(parsePriceLabelToManwon(""), null);
 });

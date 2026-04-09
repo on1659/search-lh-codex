@@ -10,13 +10,14 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.post("/api/search", async (req, res) => {
   const location = String(req.body?.location || "").trim();
+  const maxPrice = Number(req.body?.maxPrice) || null;
 
   if (!location) {
     return res.status(400).json({ error: "구/동을 입력해 주세요." });
   }
 
   try {
-    const result = await searchListings(location);
+    const result = await searchListings(location, maxPrice);
     return res.json(result);
   } catch (error) {
     console.error("Search failed:", error);

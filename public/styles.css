@@ -113,6 +113,32 @@ button {
   cursor: pointer;
 }
 
+.price-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.price-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+
+.price-label-hint {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: 0.65;
+}
+
+.price-row input {
+  max-width: 400px;
+}
+
 .status {
   margin-top: 12px;
   color: var(--muted);
@@ -280,6 +306,17 @@ button {
   color: #fff;
   background: linear-gradient(135deg, var(--accent), var(--accent-deep));
   box-shadow: none;
+}
+
+.result-tag.is-price-exceeded {
+  --tag-bg: rgba(239, 68, 68, 0.12);
+  --tag-border: rgba(239, 68, 68, 0.32);
+  --tag-fg: #b91c1c;
+}
+
+.result-card.is-exceeded {
+  opacity: 0.72;
+  border-color: rgba(239, 68, 68, 0.22);
 }
 
 .result-title {
