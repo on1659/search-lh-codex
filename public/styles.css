@@ -1,0 +1,353 @@
+:root {
+  --bg: #f4efe7;
+  --panel: rgba(255, 252, 247, 0.92);
+  --ink: #1e1d1a;
+  --muted: #5d5a54;
+  --accent: #c75d2c;
+  --accent-deep: #863716;
+  --line: rgba(30, 29, 26, 0.12);
+  --shadow: 0 20px 60px rgba(92, 64, 39, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Apple SD Gothic Neo", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(199, 93, 44, 0.16), transparent 32%),
+    linear-gradient(180deg, #fbf7f1 0%, var(--bg) 100%);
+}
+
+.app-shell {
+  width: min(1180px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 48px 0 72px;
+}
+
+.hero {
+  padding: 18px 0 12px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.hero-copy {
+  max-width: 760px;
+  margin: 16px 0 0;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.search-panel,
+.summary-card,
+.result-card,
+.site-status-item,
+.table-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+.search-panel {
+  padding: 22px;
+  border-radius: 24px;
+  margin-top: 24px;
+}
+
+.table-section {
+  margin-top: 28px;
+}
+
+.input-label,
+.section-title {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+
+.search-row {
+  display: grid;
+  grid-template-columns: 1fr 160px;
+  gap: 12px;
+}
+
+input,
+button {
+  border-radius: 16px;
+  border: 1px solid rgba(30, 29, 26, 0.15);
+  font: inherit;
+}
+
+input {
+  padding: 16px 18px;
+  background: #fffdfa;
+}
+
+button {
+  padding: 16px 20px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  cursor: pointer;
+}
+
+.status {
+  margin-top: 12px;
+  color: var(--muted);
+}
+
+.results-layout {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 22px;
+  margin-top: 28px;
+}
+
+.summary-card {
+  min-height: 74px;
+  padding: 18px 20px;
+  border-radius: 20px;
+  color: var(--muted);
+}
+
+.table-card {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.site-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.site-table th,
+.site-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 0.92rem;
+}
+
+.site-table th {
+  background: rgba(199, 93, 44, 0.08);
+  color: var(--accent-deep);
+  font-weight: 700;
+}
+
+.site-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.empty-row td {
+  color: var(--muted);
+  text-align: center;
+}
+
+.results-grid,
+.site-status-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.result-card,
+.site-status-item {
+  border-radius: 20px;
+  padding: 18px;
+}
+
+.result-image-wrap {
+  overflow: hidden;
+  margin: -18px -18px 16px;
+  border-radius: 20px 20px 18px 18px;
+  background:
+    linear-gradient(135deg, rgba(199, 93, 44, 0.12), rgba(134, 55, 22, 0.04)),
+    #f6f1ea;
+}
+
+.result-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.result-site {
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-deep);
+  background: rgba(199, 93, 44, 0.1);
+}
+
+.result-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 0;
+}
+
+.result-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--tag-fg, var(--accent-deep));
+  background: var(--tag-bg, rgba(199, 93, 44, 0.08));
+  box-shadow: inset 0 0 0 1px var(--tag-border, rgba(199, 93, 44, 0.12));
+}
+
+.result-tag.is-primary {
+  background: rgba(199, 93, 44, 0.14);
+}
+
+.result-tag.is-trade-monthly {
+  --tag-bg: rgba(199, 93, 44, 0.16);
+  --tag-border: rgba(199, 93, 44, 0.24);
+  --tag-fg: #8b3b17;
+}
+
+.result-tag.is-trade-jeonse {
+  --tag-bg: rgba(37, 99, 235, 0.14);
+  --tag-border: rgba(37, 99, 235, 0.24);
+  --tag-fg: #1d4ed8;
+}
+
+.result-tag.is-trade-sale {
+  --tag-bg: rgba(22, 163, 74, 0.14);
+  --tag-border: rgba(22, 163, 74, 0.24);
+  --tag-fg: #15803d;
+}
+
+.result-tag.is-trade-half {
+  --tag-bg: rgba(180, 83, 9, 0.16);
+  --tag-border: rgba(180, 83, 9, 0.24);
+  --tag-fg: #92400e;
+}
+
+.result-tag.is-price {
+  --tag-bg: rgba(120, 113, 108, 0.12);
+  --tag-border: rgba(120, 113, 108, 0.2);
+  --tag-fg: #57534e;
+}
+
+.result-tag.is-room {
+  --tag-bg: rgba(225, 29, 72, 0.1);
+  --tag-border: rgba(225, 29, 72, 0.18);
+  --tag-fg: #be123c;
+}
+
+.result-tag.is-parking-yes {
+  --tag-bg: rgba(22, 163, 74, 0.14);
+  --tag-border: rgba(22, 163, 74, 0.24);
+  --tag-fg: #166534;
+}
+
+.result-tag.is-parking-no {
+  --tag-bg: rgba(100, 116, 139, 0.14);
+  --tag-border: rgba(100, 116, 139, 0.22);
+  --tag-fg: #475569;
+}
+
+.result-tag.is-lh {
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  box-shadow: none;
+}
+
+.result-title {
+  margin: 14px 0 10px;
+  font-size: 1.05rem;
+}
+
+.result-snippet,
+.site-note {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.result-link {
+  display: inline-block;
+  margin-top: 14px;
+  color: var(--accent-deep);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.site-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.site-badge.ok {
+  color: #14532d;
+  background: rgba(34, 197, 94, 0.14);
+}
+
+.site-badge.empty {
+  color: #92400e;
+  background: rgba(245, 158, 11, 0.16);
+}
+
+.site-badge.error {
+  color: #991b1b;
+  background: rgba(239, 68, 68, 0.14);
+}
+
+@media (max-width: 840px) {
+  .app-shell {
+    width: min(100vw - 20px, 1180px);
+    padding-top: 28px;
+  }
+
+  .search-row,
+  .results-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .table-card {
+    overflow-x: auto;
+  }
+
+  .site-table {
+    min-width: 760px;
+  }
+}

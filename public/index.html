@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LH 매물 통합 검색</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <p class="eyebrow">LH Listing Finder</p>
+        <h1>구·동만 넣으면 여러 부동산 사이트에서<br />LH 가능 매물을 한 번에 찾습니다</h1>
+        <p class="hero-copy">
+          직방, 다방, 네이버부동산, 피터팬, 호갱노노, 당근 부동산을 병렬로 확인하고,
+          실제로 LH 관련 문구가 보이는 매물 링크만 모아 보여줍니다.
+        </p>
+      </section>
+
+      <section class="search-panel">
+        <form id="search-form" class="search-form">
+          <label for="location" class="input-label">지역 입력</label>
+          <div class="search-row">
+            <input
+              id="location"
+              name="location"
+              type="text"
+              placeholder="예: 관악구 봉천동"
+              autocomplete="off"
+              required
+            />
+            <button type="submit">검색</button>
+          </div>
+        </form>
+
+        <div id="status" class="status">검색 대기 중</div>
+      </section>
+
+      <section class="table-section">
+        <div class="section-title">사이트별 검증표</div>
+        <div class="table-card">
+          <table class="site-table">
+            <thead>
+              <tr>
+                <th>사이트</th>
+                <th>상태</th>
+                <th>검색 진입</th>
+                <th>전체 후보</th>
+                <th>LH 후보</th>
+                <th>위치 일치</th>
+                <th>최종 결과</th>
+              </tr>
+            </thead>
+            <tbody id="site-table-body">
+              <tr class="empty-row">
+                <td colspan="7">검색 전입니다.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="results-layout">
+        <div>
+          <div class="section-title">통합 결과</div>
+          <div id="summary" class="summary-card">
+            구/동을 입력하고 검색을 누르면 LH 관련 매물 링크를 모아 보여드립니다.
+          </div>
+          <div id="results" class="results-grid"></div>
+        </div>
+
+        <aside>
+          <div class="section-title">검증 메모</div>
+          <div id="site-status" class="site-status-list"></div>
+        </aside>
+      </section>
+    </main>
+
+    <template id="result-template">
+      <article class="result-card">
+        <div class="result-image-wrap">
+          <img class="result-image" alt="" loading="lazy" />
+        </div>
+        <div class="result-site"></div>
+        <div class="result-tags"></div>
+        <h2 class="result-title"></h2>
+        <p class="result-snippet"></p>
+        <a class="result-link" target="_blank" rel="noreferrer">매물 보기</a>
+      </article>
+    </template>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
