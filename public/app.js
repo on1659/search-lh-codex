@@ -166,7 +166,7 @@ function renderSummary(data) {
 function renderResults(items) {
   resultsEl.innerHTML = "";
 
-  if (!items.length) {
+  if (!items || !items.length) {
     resultsEl.innerHTML = `
       <article class="result-card">
         <h2 class="result-title">찾은 LH 관련 링크가 없습니다.</h2>
@@ -325,8 +325,15 @@ form.addEventListener("submit", async (event) => {
     renderSiteStatuses(data.sites);
     setLoading(false, location);
   } catch (error) {
+    console.error("[LH Search] 검색 오류:", error);
     statusEl.textContent = "검색 실패";
-    summaryEl.textContent = error.message;
+    summaryEl.innerHTML = `<span style="color:#b91c1c">오류: ${escapeHtml(error.message)}</span>`;
+    resultsEl.innerHTML = `
+      <article class="result-card">
+        <h2 class="result-title" style="color:#b91c1c">검색 중 오류가 발생했습니다</h2>
+        <p class="result-snippet">${escapeHtml(error.message)}</p>
+      </article>
+    `;
     siteTableBodyEl.innerHTML = `
       <tr class="empty-row">
         <td colspan="7">${escapeHtml(error.message)}</td>
