@@ -17,10 +17,12 @@ const NAVER_DEFAULT_ZOOM = 16;
 const NAVER_TAB_TIMEOUT_MS = 15000;
 const CLOSE_TEXTS = ["닫기", "괜찮아요", "나중에", "확인", "close", "skip"];
 const NEGATIVE_LH_PATTERNS = [
-  /(lh|엘에이치)[^.!?\n]{0,18}(불가|불가능|안됨|안돼|제외|거절|불허)/i,
+  // "lh 가능" 처럼 중간에 긍정 단어가 있으면 제외 (lh 가능, 일반 대출 불가 → 오탐 방지)
+  /(lh|엘에이치)(?:(?!가능|됩니다|돼요|가능해|가능합)[^.!?\n]){0,18}(불가|불가능|안됨|안돼|제외|거절|불허)/i,
   /(불가|불가능|안됨|안돼|제외|거절|불허)[^.!?\n]{0,18}(lh|엘에이치)/i,
   /(일반전세자금대출만 가능|일반 전세자금대출만 가능)/i,
-  /대출[^.!?\n]{0,8}(불가|불가능|안됨|안돼)/i,
+  // 전세자금대출/주택도시기금 불가만 negative로 처리 (일반 대출 불가 != LH 불가)
+  /(전세자금대출|주택도시기금)[^.!?\n]{0,12}(불가|불가능|안됨|안돼)/i,
   /(버팀목|보증보험)[^.!?\n]{0,12}(불가|불가능|안됨|안돼)/i,
 ];
 const STRONG_LH_PATTERNS = [
@@ -1262,18 +1264,25 @@ async function searchPeterpan(site, location) {
       );
     });
 
-    const results = filtered.slice(0, 20).map((card) => ({
-      siteId: site.id,
-      siteName: site.name,
-      title: normalizeWhitespace(card.title),
-      snippet: normalizeWhitespace(card.snippet),
-      link: `https://www.peterpanz.com/house/${card.hidx}`,
-      imageUrl: card.imageUrl,
-      matchedKeyword: getMatchedKeyword(card.snippet) || "LH",
-      verificationLevel: "strong",
-      detailVerified: false,
-      ...parseListingFacts(card.title, card.snippet),
-    }));
+    const results = filtered.slice(0, 20).map((card) => {
+      const mergedLocation = `${card.sigungu} ${card.dong}`.trim();
+      const combinedText = buildListingText(mergedLocation, card.title, card.snippet);
+      const evidence = evaluateLhEvidence(combinedText);
+      return {
+        siteId: site.id,
+        siteName: site.name,
+        title: normalizeWhitespace(card.title),
+        snippet: normalizeWhitespace(card.snippet),
+        link: `https://www.peterpanz.com/house/${card.hidx}`,
+        imageUrl: card.imageUrl,
+        matchedKeyword: evidence.matchedKeyword || getMatchedKeyword(card.snippet) || "LH",
+        verificationLevel: evidence.level,
+        evidenceScore: evidence.score,
+        evidenceReasons: evidence.reasons,
+        detailVerified: false,
+        ...parseListingFacts(card.title, card.snippet),
+      };
+    });
 
     return {
       siteId: site.id,

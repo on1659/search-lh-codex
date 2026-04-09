@@ -36,7 +36,9 @@ test("matchesLocation accepts a listing when any location token is present", () 
 test("containsNegativeLhContext detects blocked LH cases", () => {
   assert.equal(containsNegativeLhContext("일반전세자금대출만 가능, LH 불가"), true);
   assert.equal(containsNegativeLhContext("버팀목 불가 / 보증보험 불가"), true);
-  assert.equal(containsNegativeLhContext("대출 불가능, 즉시 입주 가능"), true);
+  // "대출 불가능" 단독은 일반 은행 대출을 의미할 수 있어 LH 불가와 동일하지 않음.
+  // LH 관련 전세자금대출 불가를 명시하는 경우만 negative로 처리.
+  assert.equal(containsNegativeLhContext("전세자금대출 불가능, 즉시 입주 가능"), true);
   assert.equal(containsNegativeLhContext("LH 가능, 보증보험 가입 가능"), false);
 });
 
